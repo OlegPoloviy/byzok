@@ -581,10 +581,16 @@
             subBranch.appendChild(cluster);
 
             // Додаємо більше квітів у кластері
-            const flowerCount = isMobile ? 40 : 60; // Збільшено кількість квітів
+            const flowerCount = isMobile ? 40 : 100; // Збільшено кількість квітів
             for (let j = 0; j < flowerCount; j++) {
               const flower = document.createElement("div");
               flower.className = "lilac-flower";
+              flower.style.backgroundColor =
+                "hsl(" +
+                (Math.random() * 60 + 260) +
+                ", 70%, " +
+                (60 + Math.random() * 20) +
+                "%)";
               flower.style.left = Math.random() * 80 * scaleFactor + "px";
               flower.style.top = Math.random() * 100 * scaleFactor + "px";
               cluster.appendChild(flower);
