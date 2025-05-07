@@ -580,8 +580,8 @@
             cluster.style.transform = `rotate(${angle / 2}deg)`;
             subBranch.appendChild(cluster);
 
-            // Додаємо окремі квіти в кластері
-            const flowerCount = isMobile ? 20 : 30; // Менше квітів для мобільних
+            // Додаємо більше квітів у кластері
+            const flowerCount = isMobile ? 40 : 60; // Збільшено кількість квітів
             for (let j = 0; j < flowerCount; j++) {
               const flower = document.createElement("div");
               flower.className = "lilac-flower";
