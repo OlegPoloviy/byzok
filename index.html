@@ -219,6 +219,200 @@
         height: 90vmin;
         max-width: 600px;
         max-height: 600px;
+        z-index: 1;
+      }
+
+      /* Стилі для землі */
+      .ground {
+        position: absolute;
+        bottom: -10%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        height: 15%;
+        background: linear-gradient(to bottom, #2d5a27, #1a3d17);
+        border-radius: 50% 50% 0 0;
+        z-index: 0;
+      }
+
+      .grass {
+        position: absolute;
+        bottom: -5%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        height: 20px;
+        background: linear-gradient(to bottom, transparent, #3a7a33);
+        z-index: 1;
+        border-radius: 50% 50% 0 0;
+      }
+
+      .grass-blade {
+        position: absolute;
+        bottom: 0;
+        width: 2px;
+        height: 15px;
+        background: #4a8a43;
+        transform-origin: bottom center;
+      }
+
+      /* Стилі для води */
+      .water {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 25vh;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 100, 255, 0.2),
+          rgba(0, 50, 255, 0.4)
+        );
+        z-index: -1;
+        overflow: hidden;
+      }
+
+      .water-reflection {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+          circle at center,
+          rgba(255, 255, 255, 0.2) 0%,
+          rgba(255, 255, 255, 0) 70%
+        );
+        animation: water-ripple 4s infinite alternate;
+      }
+
+      .moon-reflection {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        background-color: rgba(244, 246, 240, 0.3);
+        border-radius: 50%;
+        box-shadow: 0 0 20px 10px rgba(244, 246, 240, 0.2);
+        opacity: 0;
+        transition: opacity 2s;
+        transform: scaleX(-1) scaleY(-1);
+        filter: blur(2px);
+      }
+
+      @keyframes water-ripple {
+        0% {
+          transform: scale(1);
+          opacity: 0.3;
+        }
+        100% {
+          transform: scale(1.1);
+          opacity: 0.5;
+        }
+      }
+
+      /* Стилі для ромашок */
+      .daisy {
+        position: absolute;
+        bottom: 20px;
+        width: 40px;
+        height: 40px;
+        transform-origin: bottom center;
+        opacity: 0;
+        transition: opacity 1.5s;
+        z-index: 2;
+      }
+
+      .daisy-petal {
+        position: absolute;
+        width: 15px;
+        height: 25px;
+        background: white;
+        border-radius: 50% 50% 0 50%;
+        transform-origin: bottom center;
+        opacity: 0;
+        transform: scale(0);
+        transition: all 0.5s;
+        box-shadow: 0 0 3px rgba(255, 255, 255, 0.6);
+      }
+
+      .daisy-center {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        background: #ffd700;
+        border-radius: 50%;
+        top: 60%;
+        left: 15%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transform: scale(0);
+        transition: all 0.5s;
+      }
+
+      .daisy-petal.bloomed {
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+      }
+
+      /* Анімація коливання ромашок */
+      @keyframes daisy-sway {
+        0%,
+        100% {
+          transform: rotate(0deg);
+        }
+        50% {
+          transform: rotate(3deg);
+        }
+      }
+
+      /* Стилі для піонів */
+      .peony {
+        position: absolute;
+        bottom: 20px;
+        width: 60px;
+        height: 60px;
+        transform-origin: bottom center;
+        opacity: 0;
+        transition: opacity 1.5s;
+        z-index: 2;
+      }
+
+      .peony-petal {
+        position: absolute;
+        width: 20px;
+        height: 30px;
+        background: linear-gradient(to bottom, #ff69b4, #ff1493);
+        border-radius: 50% 50% 0 50%;
+        transform-origin: bottom center;
+        opacity: 0;
+        transform: scale(0);
+        transition: all 0.5s;
+      }
+
+      .peony-center {
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        background: #ffd700;
+        border-radius: 50%;
+        top: 50%;
+        left: 15%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transform: scale(0);
+        transition: all 0.5s;
+      }
+
+      .peony-petal.bloomed {
+        box-shadow: 0 0 5px rgba(255, 105, 180, 0.6);
+      }
+
+      /* Анімація коливання піонів */
+      @keyframes peony-sway {
+        0%,
+        100% {
+          transform: rotate(0deg);
+        }
+        50% {
+          transform: rotate(2deg);
+        }
       }
 
       .branch {
@@ -455,6 +649,10 @@
     </div>
 
     <div class="container" id="lilac-container">
+      <div class="ground"></div>
+      <div class="water"></div>
+      <div class="water-reflection"></div>
+      <div class="grass"></div>
       <div class="branch" id="main-branch"></div>
       <div class="moon"></div>
     </div>
@@ -537,6 +735,170 @@
               }, 100);
             }, i * 300);
           }
+        }
+
+        // Створення трави
+        function createGrass() {
+          const grass = document.querySelector(".grass");
+          const bladeCount = 50;
+
+          for (let i = 0; i < bladeCount; i++) {
+            const blade = document.createElement("div");
+            blade.className = "grass-blade";
+            blade.style.left = i * (100 / bladeCount) + "%";
+            blade.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
+            blade.style.height = 10 + Math.random() * 10 + "px";
+            grass.appendChild(blade);
+          }
+        }
+
+        // Створення піонів
+        function createPeonies() {
+          const peonyCount = 3;
+          const peonyPositions = [
+            { left: "15%", bottom: "20px" },
+            { left: "40%", bottom: "20px" },
+            { left: "65%", bottom: "20px" },
+          ];
+
+          // Масив можливих кольорів для пелюсток
+          const petalColors = [
+            { hue: 340, saturation: 70, lightness: 60 }, // Рожевий
+            { hue: 320, saturation: 75, lightness: 65 }, // Фіолетовий
+            { hue: 350, saturation: 80, lightness: 70 }, // Яскраво-рожевий
+            { hue: 300, saturation: 70, lightness: 60 }, // Пурпурний
+            { hue: 330, saturation: 75, lightness: 65 }, // Малиновий
+          ];
+
+          peonyPositions.forEach((pos, index) => {
+            const peony = document.createElement("div");
+            peony.className = "peony";
+            peony.style.left = pos.left;
+            peony.style.bottom = pos.bottom;
+            peony.style.animation = `peony-sway ${
+              3 + index
+            }s infinite alternate`;
+
+            // Створюємо пелюстки
+            const petalCount = 12;
+            for (let i = 0; i < petalCount; i++) {
+              const petal = document.createElement("div");
+              petal.className = "peony-petal";
+              petal.style.transform = `rotate(${i * (360 / petalCount)}deg)`;
+
+              // Вибираємо випадковий колір для кожного пелюстка
+              const randomColor =
+                petalColors[Math.floor(Math.random() * petalColors.length)];
+              const { hue, saturation, lightness } = randomColor;
+
+              // Додаємо невелику варіацію кольору для кожного пелюстка
+              const petalHue = hue + (Math.random() * 10 - 5);
+              const petalSaturation = saturation + (Math.random() * 10 - 5);
+              const petalLightness = lightness + (Math.random() * 10 - 5);
+              petal.style.backgroundColor = `hsl(${petalHue}, ${petalSaturation}%, ${petalLightness}%)`;
+              peony.appendChild(petal);
+            }
+
+            // Додаємо центр квітки з фіксованим золотистим кольором
+            const center = document.createElement("div");
+            center.className = "peony-center";
+            center.style.backgroundColor = "#ffd700"; // Золотистий колір
+            peony.appendChild(center);
+
+            container.appendChild(peony);
+          });
+        }
+
+        // Анімація розквітання піонів
+        function animatePeonies() {
+          const peonies = document.querySelectorAll(".peony");
+          peonies.forEach((peony, index) => {
+            setTimeout(() => {
+              peony.style.opacity = "1";
+              const petals = peony.querySelectorAll(".peony-petal");
+              const center = peony.querySelector(".peony-center");
+
+              petals.forEach((petal, i) => {
+                setTimeout(() => {
+                  petal.style.opacity = "1";
+                  petal.style.transform = `rotate(${
+                    i * (360 / petals.length)
+                  }deg) scale(1)`;
+                  petal.classList.add("bloomed");
+                }, i * 100);
+              });
+
+              setTimeout(() => {
+                center.style.opacity = "1";
+                center.style.transform = "translate(-50%, -50%) scale(1)";
+              }, petals.length * 100);
+            }, index * 500);
+          });
+        }
+
+        // Створення ромашок
+        function createDaisies() {
+          const daisyCount = 5;
+          const daisyPositions = [
+            { left: "10%", bottom: "20px" },
+            { left: "25%", bottom: "20px" },
+            { left: "55%", bottom: "20px" },
+            { left: "70%", bottom: "20px" },
+            { left: "85%", bottom: "20px" },
+          ];
+
+          daisyPositions.forEach((pos, index) => {
+            const daisy = document.createElement("div");
+            daisy.className = "daisy";
+            daisy.style.left = pos.left;
+            daisy.style.bottom = pos.bottom;
+            daisy.style.animation = `daisy-sway ${
+              2 + index
+            }s infinite alternate`;
+
+            // Створюємо пелюстки
+            const petalCount = 12;
+            for (let i = 0; i < petalCount; i++) {
+              const petal = document.createElement("div");
+              petal.className = "daisy-petal";
+              petal.style.transform = `rotate(${i * (360 / petalCount)}deg)`;
+              daisy.appendChild(petal);
+            }
+
+            // Додаємо центр квітки
+            const center = document.createElement("div");
+            center.className = "daisy-center";
+            daisy.appendChild(center);
+
+            container.appendChild(daisy);
+          });
+        }
+
+        // Анімація розквітання ромашок
+        function animateDaisies() {
+          const daisies = document.querySelectorAll(".daisy");
+          daisies.forEach((daisy, index) => {
+            setTimeout(() => {
+              daisy.style.opacity = "1";
+              const petals = daisy.querySelectorAll(".daisy-petal");
+              const center = daisy.querySelector(".daisy-center");
+
+              petals.forEach((petal, i) => {
+                setTimeout(() => {
+                  petal.style.opacity = "1";
+                  petal.style.transform = `rotate(${
+                    i * (360 / petals.length)
+                  }deg) scale(1)`;
+                  petal.classList.add("bloomed");
+                }, i * 50);
+              });
+
+              setTimeout(() => {
+                center.style.opacity = "1";
+                center.style.transform = "translate(-50%, -50%) scale(1)";
+              }, petals.length * 50);
+            }, index * 300);
+          });
         }
 
         // Створення гілок і квітів бузку
@@ -699,7 +1061,6 @@
               flower.style.transform = `scale(${0.8 + Math.random() * 0.5})`;
               flower.classList.add("bloomed");
 
-              // Додамо трохи пилку при розквітанні деяких квітів
               if (Math.random() > 0.8) {
                 const rect = flower.getBoundingClientRect();
                 const containerRect = container.getBoundingClientRect();
@@ -710,6 +1071,11 @@
               }
             }, i * 50);
           });
+
+          // Запускаємо анімацію піонів
+          animatePeonies();
+          // Запускаємо анімацію ромашок
+          animateDaisies();
         }
 
         // Функція скидання анімації
@@ -719,6 +1085,40 @@
             flower.style.opacity = 0;
             flower.style.transform = "scale(0)";
             flower.classList.remove("bloomed");
+          });
+
+          // Скидаємо піони
+          const peonies = document.querySelectorAll(".peony");
+          peonies.forEach((peony) => {
+            peony.style.opacity = "0";
+            const petals = peony.querySelectorAll(".peony-petal");
+            const center = peony.querySelector(".peony-center");
+
+            petals.forEach((petal) => {
+              petal.style.opacity = "0";
+              petal.style.transform = "scale(0)";
+              petal.classList.remove("bloomed");
+            });
+
+            center.style.opacity = "0";
+            center.style.transform = "translate(-50%, -50%) scale(0)";
+          });
+
+          // Скидаємо ромашки
+          const daisies = document.querySelectorAll(".daisy");
+          daisies.forEach((daisy) => {
+            daisy.style.opacity = "0";
+            const petals = daisy.querySelectorAll(".daisy-petal");
+            const center = daisy.querySelector(".daisy-center");
+
+            petals.forEach((petal) => {
+              petal.style.opacity = "0";
+              petal.style.transform = "scale(0)";
+              petal.classList.remove("bloomed");
+            });
+
+            center.style.opacity = "0";
+            center.style.transform = "translate(-50%, -50%) scale(0)";
           });
 
           // Приховати місяць і промені в денному режимі
@@ -742,6 +1142,31 @@
               ray.style.opacity = "0.5";
             });
 
+            // Додаємо відображення місяця у воді
+            const water = document.querySelector(".water");
+            const moonReflection = document.createElement("div");
+            moonReflection.className = "moon-reflection";
+
+            // Розраховуємо позицію відображення
+            const moonRect = moon.getBoundingClientRect();
+            const waterRect = water.getBoundingClientRect();
+
+            // Відображаємо місяць відносно його позиції
+            const reflectionX =
+              ((moonRect.left - waterRect.left) / waterRect.width) * 100;
+            const reflectionY =
+              ((moonRect.top - waterRect.top) / waterRect.height) * 100;
+
+            moonReflection.style.left = `${reflectionX}%`;
+            moonReflection.style.top = `${reflectionY}%`;
+
+            water.appendChild(moonReflection);
+
+            // Показуємо відображення з анімацією
+            setTimeout(() => {
+              moonReflection.style.opacity = "0.3";
+            }, 100);
+
             // Додаємо періодичні падаючі зірки
             setInterval(createShootingStar, 5000);
 
@@ -752,6 +1177,15 @@
             document.querySelectorAll(".moon-ray").forEach((ray) => {
               ray.style.opacity = "0";
             });
+
+            // Прибираємо відображення місяця
+            const moonReflection = document.querySelector(".moon-reflection");
+            if (moonReflection) {
+              moonReflection.style.opacity = "0";
+              setTimeout(() => {
+                moonReflection.remove();
+              }, 2000);
+            }
 
             // Прибираємо світлячків
             document.querySelectorAll(".firefly").forEach((fly) => {
@@ -784,6 +1218,9 @@
         createStars();
         createLilac();
         createMoonRays();
+        createGrass();
+        createPeonies();
+        createDaisies();
 
         // Показуємо підказку на мобільних пристроях
         if (isMobile) {
